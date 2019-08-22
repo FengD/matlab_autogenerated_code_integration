@@ -23,57 +23,54 @@ void init();
 
 /**
 * @Brief Allocate memory to stock each can message in certain place.
-* @param [int] the interface of socket can. should be 0, 1, etc.
-* @param [int] size of the list
 * @param [array] idList
+* @param [int] size of the list
 */
-void createCanMsgInMemByList(const int& interface, const int& idListSize, long *idList);
+void createCanMsgInMemByList(long *idList, int idListSize);
 
 /**
 * @Brief get the simulink CAN_MESSAGE Type by id
-* @param [int] the interface of socket can. should be 0, 1, etc.
 * @param [long] id of the message
 * @return [struct] can message
 */
-CAN_MESSAGE getSimulinkCanMsgByIdInMem(const int& interface, const long& id);
+CAN_MESSAGE getSimulinkCanMsgByIdInMem(long id);
 
 /**
 * @Brief update the can message in the memory
-* @param [int] the interface of socket can. should be 0, 1, etc.
 * @param [struct] can message
 */
-void updateMemBySimulinkCanMsg(const int& interface, CAN_MESSAGE *canmsg);
+void updateMemBySimulinkCanMsg(CAN_MESSAGE *canmsg);
 
 /**
 * @Brief print message in the terminal
 * @param [struct] can message
 */
-void printSimulinkCanMsg(const CAN_MESSAGE& canmsg);
+void printSimulinkCanMsg(CAN_MESSAGE *canmsg);
 
 /**
 * @Brief Create a thread of can receive
 * @param [int] the interface of socket can. should be 0, 1, etc.
-* @param [int] the size of the list
 * @param [array] the list of ids of can message which accepted
+* @param [array] the size of the list
 */
-void createAndJoinCanRxThread(const int& interface, const int& idListSize, long *idList);
+void createAndJoinCanRxThread(int interface, long *idList, int idListSize);
 
 /**
 * @Brief Create a thread of can transmit
 * @param [int] the interface of socket can. should be 0, 1, etc.
-* @param [int] the size of the list
-* @param [int] the period of can transmit. The unit is usec.
 * @param [array] the list of ids of can message which accepted
+* @param [array] the size of the list
+* @param [int] the period of can transmit. The unit is usec.
 */
-void createAndJoinCanTxThread(const int& interface, const int& idListSize, const int& timePeriodUsec, long *idList);
+void createAndJoinCanTxThread(int interface, long *idList, int idListSize, int timePeriodUsec);
 
 /**
 * @Brief Create a thread of simulink model execution.
-* @param [int] the period of simulink step model execution. The unit is usec.
 * @param [function] step methode of the loop
 * @param [function] init methode
 * @param [function] ternimate methode
+* @param [int] the period of simulink step model execution. The unit is usec.
 */
-void createAndJoinSimulinkThread(const int& timePeriodUsec, void (*oneStepFunc)(), void (*initializeFunc)(), void (*ternimateFunc)());
+void createAndJoinSimulinkThread( void (*oneStepFunc)(), void (*initializeFunc)(), void (*ternimateFunc)(), int timePeriodUsec);
 
 #endif // _UTIL_H_

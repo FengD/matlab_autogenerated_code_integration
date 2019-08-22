@@ -1,4 +1,4 @@
-#include "api.h"
+/*#include "api.h"
 
 #define CAN1_TX_IDLIST_SIZE 5
 #define CAN1_TX_IDLIST_SIZE2 10
@@ -19,14 +19,15 @@ void ternimateFunc () {
 
 int main() {
   init();
-  createCanMsgInMemByList(1, CAN1_TX_IDLIST_SIZE, can1TxIdList);
-  createCanMsgInMemByList(1, CAN1_RX_IDLIST_SIZE, can1RxIdList);
-  createCanMsgInMemByList(1, CAN1_TX_IDLIST_SIZE2, can1TxIdList2);
+  createCanMsgInMemByList(can1TxIdList, CAN1_TX_IDLIST_SIZE);
+  createCanMsgInMemByList(can1RxIdList, CAN1_RX_IDLIST_SIZE);
+  createCanMsgInMemByList(can1TxIdList2, CAN1_TX_IDLIST_SIZE2);
 
-  createAndJoinCanRxThread(1, CAN1_RX_IDLIST_SIZE, can1RxIdList);
-  createAndJoinCanTxThread(1, CAN1_TX_IDLIST_SIZE, 1000000, can1TxIdList);
-  createAndJoinCanTxThread(1, CAN1_TX_IDLIST_SIZE2, 100000, can1TxIdList2);
+  createAndJoinCanRxThread(1, can1RxIdList, CAN1_RX_IDLIST_SIZE);
+  createAndJoinCanTxThread(1, can1TxIdList, CAN1_TX_IDLIST_SIZE, 1000000);
+  createAndJoinCanTxThread(1, can1TxIdList2, CAN1_TX_IDLIST_SIZE2, 100000);
 
-  createAndJoinSimulinkThread(20000, &oneStepFunc, &initializeFunc, &ternimateFunc);
+  createAndJoinSimulinkThread(&oneStepFunc, &initializeFunc, &ternimateFunc, 20000);
   return 0;
 }
+*/

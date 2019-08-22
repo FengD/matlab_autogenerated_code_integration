@@ -1,13 +1,3 @@
-/* -*- mode: C++ -*-
- *
- *  Copyright (C) 2019 Feng DING, Hirain
- *
- *  License: Modified BSD Software License Agreement
- *
- *  Simulink integration
- *
- */
-
 #ifndef _SIMULINK_H_
 #define _SIMULINK_H_
 

@@ -17,11 +17,9 @@ typedef std::pair<const long, struct can_frame> ValueType;
 typedef boost::interprocess::allocator<ValueType, boost::interprocess::managed_shared_memory::segment_manager> ShmAlloc;
 typedef boost::unordered_map<KeyType, MappedType, boost::hash<KeyType>, std::equal_to<KeyType>, ShmAlloc> ShmHashMap;
 
-void deleteShmMap();
-void initShmMap(int canInterface);
-// void getShmHashMapByInterface(int canInterface, ShmHashMap *map);
-void addCanListInShm(int canInterface, long *list, int sizeList);
-void updateCanFrame(int canInterface, struct can_frame canFrame);
-void getCanFrameById(int canInterface, long id, struct can_frame *canFrame);
+void initShmMap();
+void addCanListInShm(long *list, int sizeList);
+void updateCanFrame(struct can_frame canFrame);
+void getCanFrameById(long id, struct can_frame *canFrame);
 
 #endif // _SHARE_DATA_H_

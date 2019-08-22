@@ -1,13 +1,3 @@
-/* -*- mode: C++ -*-
- *
- *  Copyright (C) 2019 Feng DING, Hirain
- *
- *  License: Modified BSD Software License Agreement
- *
- *  util
- *
- */
-
 #ifndef _UTIL_H_
 #define _UTIL_H_
 

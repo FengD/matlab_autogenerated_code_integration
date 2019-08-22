@@ -1,23 +1,12 @@
-/* -*- mode: C++ -*-
- *
- *  Copyright (C) 2019 Feng DING, Hirain
- *
- *  License: Modified BSD Software License Agreement
- *
- *  The api is used to execute the simulink model as embedded code in ubuntu system
- *
- */
-
 #include "api.h"
-#include <pthread.h>
-#include <thread>
-#include <boost/bind.hpp>
-#include <boost/function.hpp>
-
 #include "share_data.h"
 #include "can_no_fd.h"
 #include "simulink.h"
 #include "util.h"
+#include <pthread.h>
+#include <thread>
+#include <boost/bind.hpp>
+#include <boost/function.hpp>
 
 typedef boost::function<void(void)> Func;
 
@@ -28,11 +17,11 @@ struct thread_arg {
 	int timePeriodUsec;
 };
 
-CAN_MESSAGE getSimulinkCanMsgByIdInMem(const int& interface, const long& id) {
+CAN_MESSAGE getSimulinkCanMsgByIdInMem(long id) {
 	struct can_frame *canFrame;
 	CAN_MESSAGE canmsg;
 	canFrame = (struct can_frame*) malloc(sizeof(can_frame));
-	getCanFrameById(interface, id, canFrame);
+	getCanFrameById(id, canFrame);
 	canmsg.ID = id;
   memcpy(canmsg.Data, canFrame->data, canFrame->can_dlc);
   canmsg.Length = canFrame->can_dlc;
@@ -40,23 +29,23 @@ CAN_MESSAGE getSimulinkCanMsgByIdInMem(const int& interface, const long& id) {
 	return canmsg;
 }
 
-void updateMemBySimulinkCanMsg(const int& interface, CAN_MESSAGE *canmsg) {
+void updateMemBySimulinkCanMsg(CAN_MESSAGE *canmsg) {
 	struct can_frame canFrame;
 	canFrame.can_id = canmsg->ID;
 	canFrame.can_dlc = canmsg->Length;
 	memcpy(canFrame.data, canmsg->Data, canmsg->Length);
-	updateCanFrame(interface, canFrame);
+	updateCanFrame(canFrame);
 }
 
-void printSimulinkCanMsg(CAN_MESSAGE canmsg) {
-	printf("(HEX)id: %x len: %d msg: ", canmsg.ID, canmsg.Length);
-  for (int i = 0; i < canmsg.Length; i++) {
-    printf("%d ", canmsg.Data[i]);
+void printSimulinkCanMsg(CAN_MESSAGE *canmsg) {
+	printf("(HEX)id: %x ", canmsg->ID);
+  for (int i = 0; i < canmsg->Length; i++) {
+    printf("%d ", canmsg->Data[i]);
   }
   printf("\n");
 }
 
-void createAndJoinSimulinkThread(const int& timePeriodUsec, void (*oneStepFunc)(), void (*initializeFunc)(), void (*ternimateFunc)()) {
+void createAndJoinSimulinkThread( void (*oneStepFunc)(), void (*initializeFunc)(), void (*ternimateFunc)(), int timePeriodUsec) {
   Func oneStepFuncF(boost::bind(oneStepFunc));
   Func initializeFuncF(boost::bind(initializeFunc));
   Func ternimateFuncF(boost::bind(ternimateFunc));
@@ -79,13 +68,11 @@ void createAndJoinSimulinkThread(const int& timePeriodUsec, void (*oneStepFunc)(
 }
 
 void init() {
-	deleteShmMap();
-  initShmMap(0);
-	initShmMap(1);
+  initShmMap();
 }
 
-void createCanMsgInMemByList(const int& interface, const int& idListSize, long *idList) {
-  addCanListInShm(interface, idList, idListSize);
+void createCanMsgInMemByList(long *idList, int idListSize) {
+  addCanListInShm(idList, idListSize);
 }
 
 void *canRxThreadFn(void *args) {
@@ -125,12 +112,12 @@ void *canRxThreadFn(void *args) {
 			printf("can_read errno %d\n", errno);
 			break;
 		}
-		updateCanFrame(argsThread->interface, *can_rx_frame);
+		updateCanFrame(*can_rx_frame);
 	}
 	return NULL;
 }
 
-void createAndJoinCanRxThread(const int& interface, const int& idListSize, long *idList) {
+void createAndJoinCanRxThread(int interface, long *idList, int idListSize) {
 	pthread_t canRxThread;
 	// it should be pointer
 	struct thread_arg *argsThread;
@@ -187,7 +174,7 @@ void *canTxThreadFn(void *args) {
 		clock_gettime(CLOCK_MONOTONIC, &start_time);
 		// canmsg list send
 		for (int i = 0; i < argsThread->idListSize; i++) {
-			getCanFrameById(argsThread->interface, argsThread->idList[i], can_tx_frame);
+			getCanFrameById(argsThread->idList[i], can_tx_frame);
 			can_write(canTx_hdl, can_tx_frame);
 		}
 
@@ -213,7 +200,7 @@ void *canTxThreadFn(void *args) {
 	return NULL;
 }
 
-void createAndJoinCanTxThread(const int& interface, const int& idListSize, const int& timePeriodUsec, long *idList) {
+void createAndJoinCanTxThread(int interface, long *idList, int idListSize, int timePeriodUsec) {
 	pthread_t canTxThread;
 	memset(&canTxThread, 0, sizeof(canTxThread));
 

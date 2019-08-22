@@ -1,15 +1,5 @@
-/* -*- mode: C++ -*-
- *
- *  Copyright (C) 2019 Feng DING, Hirain
- *
- *  License: Modified BSD Software License Agreement
- *
- *  Simulink integration
- *
- */
-
 #include "simulink.h"
-#include <boost/function.hpp>
+#include "boost/function.hpp"
 
 struct timespec interval_simulink_;
 
