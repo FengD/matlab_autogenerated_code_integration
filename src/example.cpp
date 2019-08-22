@@ -19,15 +19,15 @@ void ternimateFunc () {
 
 int main() {
   init();
-  createCanMsgInMemByList(can1TxIdList, CAN1_TX_IDLIST_SIZE);
-  createCanMsgInMemByList(can1RxIdList, CAN1_RX_IDLIST_SIZE);
-  createCanMsgInMemByList(can1TxIdList2, CAN1_TX_IDLIST_SIZE2);
+  createCanMsgInMemByList(CAN1_TX_IDLIST_SIZE, can1TxIdList);
+  createCanMsgInMemByList(CAN1_RX_IDLIST_SIZE, can1RxIdList);
+  createCanMsgInMemByList(CAN1_TX_IDLIST_SIZE2, can1TxIdList2);
 
   createAndJoinCanRxThread(1, can1RxIdList, CAN1_RX_IDLIST_SIZE);
   createAndJoinCanTxThread(1, can1TxIdList, CAN1_TX_IDLIST_SIZE, 1000000);
   createAndJoinCanTxThread(1, can1TxIdList2, CAN1_TX_IDLIST_SIZE2, 100000);
 
-  createAndJoinSimulinkThread(&oneStepFunc, &initializeFunc, &ternimateFunc, 20000);
+  createAndJoinSimulinkThread(20000, &oneStepFunc, &initializeFunc, &ternimateFunc);
   return 0;
 }
 */

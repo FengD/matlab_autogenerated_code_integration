@@ -26,14 +26,14 @@ void init();
 * @param [array] idList
 * @param [int] size of the list
 */
-void createCanMsgInMemByList(long *idList, int idListSize);
+void createCanMsgInMemByList(const int& idListSize, long *idList);
 
 /**
 * @Brief get the simulink CAN_MESSAGE Type by id
 * @param [long] id of the message
 * @return [struct] can message
 */
-CAN_MESSAGE getSimulinkCanMsgByIdInMem(long id);
+CAN_MESSAGE getSimulinkCanMsgByIdInMem(const long& id);
 
 /**
 * @Brief update the can message in the memory
@@ -50,27 +50,27 @@ void printSimulinkCanMsg(CAN_MESSAGE *canmsg);
 /**
 * @Brief Create a thread of can receive
 * @param [int] the interface of socket can. should be 0, 1, etc.
+* @param [int] the size of the list
 * @param [array] the list of ids of can message which accepted
-* @param [array] the size of the list
 */
-void createAndJoinCanRxThread(int interface, long *idList, int idListSize);
+void createAndJoinCanRxThread(const int& interface, const int idListSize, long *idList);
 
 /**
 * @Brief Create a thread of can transmit
 * @param [int] the interface of socket can. should be 0, 1, etc.
-* @param [array] the list of ids of can message which accepted
-* @param [array] the size of the list
+* @param [int] the size of the list
 * @param [int] the period of can transmit. The unit is usec.
+* @param [array] the list of ids of can message which accepted
 */
-void createAndJoinCanTxThread(int interface, long *idList, int idListSize, int timePeriodUsec);
+void createAndJoinCanTxThread(const int& interface, const int& idListSize, const int& timePeriodUsec, long *idList);
 
 /**
 * @Brief Create a thread of simulink model execution.
+* @param [int] the period of simulink step model execution. The unit is usec.
 * @param [function] step methode of the loop
 * @param [function] init methode
 * @param [function] ternimate methode
-* @param [int] the period of simulink step model execution. The unit is usec.
 */
-void createAndJoinSimulinkThread( void (*oneStepFunc)(), void (*initializeFunc)(), void (*ternimateFunc)(), int timePeriodUsec);
+void createAndJoinSimulinkThread(const int& timePeriodUsec, void (*oneStepFunc)(), void (*initializeFunc)(), void (*ternimateFunc)());
 
 #endif // _UTIL_H_

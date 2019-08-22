@@ -7,6 +7,7 @@
  */
 
 
+#include "can_no_fd.h"
 #include <errno.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -15,7 +16,6 @@
 #include <net/if.h>
 #include <unistd.h>
 #include <stdbool.h>
-#include "can_no_fd.h"
 
 static int can_socket_cfg(struct can_hdl *hdl, struct can_cfg *cfg) {
 	// int mtu,

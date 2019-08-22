@@ -1,12 +1,22 @@
+/* -*- mode: C++ -*-
+ *
+ *  Copyright (C) 2019 Feng DING, Hirain
+ *
+ *  License: Modified BSD Software License Agreement
+ *
+ *  The api is used to execute the simulink model as embedded code in ubuntu system
+ *
+ */
+
 #include "api.h"
-#include "share_data.h"
-#include "can_no_fd.h"
-#include "simulink.h"
-#include "util.h"
 #include <pthread.h>
 #include <thread>
 #include <boost/bind.hpp>
 #include <boost/function.hpp>
+#include "share_data.h"
+#include "can_no_fd.h"
+#include "simulink.h"
+#include "util.h"
 
 typedef boost::function<void(void)> Func;
 
@@ -17,7 +27,7 @@ struct thread_arg {
 	int timePeriodUsec;
 };
 
-CAN_MESSAGE getSimulinkCanMsgByIdInMem(long id) {
+CAN_MESSAGE getSimulinkCanMsgByIdInMem(const long& id) {
 	struct can_frame *canFrame;
 	CAN_MESSAGE canmsg;
 	canFrame = (struct can_frame*) malloc(sizeof(can_frame));
@@ -71,7 +81,7 @@ void init() {
   initShmMap();
 }
 
-void createCanMsgInMemByList(long *idList, int idListSize) {
+void createCanMsgInMemByList(const int& idListSize, long *idList) {
   addCanListInShm(idList, idListSize);
 }
 
@@ -117,7 +127,7 @@ void *canRxThreadFn(void *args) {
 	return NULL;
 }
 
-void createAndJoinCanRxThread(int interface, long *idList, int idListSize) {
+void createAndJoinCanRxThread(const int& interface, const int& idListSize, long *idList) {
 	pthread_t canRxThread;
 	// it should be pointer
 	struct thread_arg *argsThread;
@@ -200,7 +210,7 @@ void *canTxThreadFn(void *args) {
 	return NULL;
 }
 
-void createAndJoinCanTxThread(int interface, long *idList, int idListSize, int timePeriodUsec) {
+void createAndJoinCanTxThread(const int& interface, const int& idListSize, const int& timePeriodUsec, long *idList) {
 	pthread_t canTxThread;
 	memset(&canTxThread, 0, sizeof(canTxThread));
 

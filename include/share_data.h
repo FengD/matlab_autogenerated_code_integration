@@ -1,3 +1,11 @@
+/* -*- mode: C++ -*-
+ *
+ *  Copyright (C) 2019 Feng DING, Hirain
+ *
+ *  License: Modified BSD Software License Agreement
+ *
+ */
+
 #ifndef _SHARE_DATA_H_
 #define _SHARE_DATA_H_
 
